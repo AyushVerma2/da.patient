@@ -21,13 +21,15 @@ public class MyUserDetailsService implements UserDetailsService {
         Optional<User> user = null;
         try {
             user = Optional.ofNullable(firebaseService.getUserDetails(s));
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + s));
+        user.orElseThrow(() -> new UsernameNotFoundException("User Not found:" +
+                " " + s));
 
         return user.map(MyUserDetails::new).get();
     }

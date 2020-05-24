@@ -23,15 +23,48 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService);
+
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().fullyAuthenticated()
+                .and()
+                .formLogin().and()
+                .rememberMe()
+                .tokenValiditySeconds(60 * 60 * 24 * 7)
+                .useSecureCookie(true)
+                .key("remember-me")
+                .rememberMeCookieName("remember-me")
+                .and()
+                .logout()
+                .deleteCookies("remember-me");
+        http.csrf().disable();
     }
 
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests()
-//                .antMatchers("/").hasRole("ADMIN")
-//                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
-//                .antMatchers("/").permitAll()
-//                .and().formLogin();
+//                .antMatchers("/patients/**")
+//                .access("hasRole('USER')")
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .formLogin()
+//                //.loginPage("/login")
+//                //.failureUrl("/login?error")
+//                .permitAll()
+//                .and()
+//                .rememberMe()
+//                .tokenValiditySeconds(60 * 60 * 24 * 7)
+//                .useSecureCookie(true)
+//                .key("remember-me")
+//                .rememberMeCookieName("remember-me")
+//                .and()
+//                .logout()
+//                .deleteCookies("remember-me")
+//                .permitAll();
+////
 //    }
 
     @Bean
